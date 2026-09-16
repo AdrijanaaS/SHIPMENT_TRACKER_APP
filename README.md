@@ -1,7 +1,7 @@
 # Shipment Tracker
 
 A tool for an operations team to see where every shipment stands and identify what's
-running late. Built for the Log-hub Junior Full Stack take-home assignment.
+running late.
 
 ## Stack
 
