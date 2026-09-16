@@ -1,0 +1,35 @@
+<a mat-button [routerLink]="'/'">
+  <mat-icon>arrow_back</mat-icon>
+  Back to shipments
+</a>
+
+<h1>New Shipment</h1>
+
+<form (ngSubmit)="submit()" class="shipment-form">
+  <mat-form-field appearance="outline">
+    <mat-label>Customer</mat-label>
+    <mat-select [(ngModel)]="customerId" name="customerId" required>
+      @for (c of customers(); track c.id) {
+        <mat-option [value]="c.id">{{ c.name }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Destination</mat-label>
+    <input matInput [(ngModel)]="destination" name="destination" placeholder="City, State" required />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Promised date</mat-label>
+    <input matInput type="date" [(ngModel)]="promisedDate" name="promisedDate" required />
+  </mat-form-field>
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <button mat-raised-button color="primary" type="submit" [disabled]="submitting()">
+    Create Shipment
+  </button>
+</form>

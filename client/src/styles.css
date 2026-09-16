@@ -1,0 +1,28 @@
+/* Shared across components — a component's own .css file is scoped to just
+   that component ("view encapsulation"), so anything more than one screen
+   uses belongs here instead of being copy-pasted into each one. */
+
+.status-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  background: #e0e0e0;
+  color: #424242;
+}
+
+.status-exception {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.late-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #ffebee;
+  color: #c62828;
+}

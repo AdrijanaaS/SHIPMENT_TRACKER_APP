@@ -1,0 +1,77 @@
+<div class="header-row">
+  <h1>Shipments</h1>
+  <button mat-raised-button color="primary" [routerLink]="'/shipments/new'">
+    <mat-icon>add</mat-icon>
+    New Shipment
+  </button>
+</div>
+
+<div class="filters">
+  <mat-form-field appearance="outline">
+    <mat-label>Search customer</mat-label>
+    <input matInput [(ngModel)]="searchText" (ngModelChange)="load()" placeholder="e.g. Acme" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Status</mat-label>
+    <mat-select [(ngModel)]="statusFilter" (selectionChange)="load()">
+      <mat-option value="">All statuses</mat-option>
+      @for (s of statuses; track s) {
+        <mat-option [value]="s">{{ s }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-slide-toggle [(ngModel)]="lateOnly" (change)="load()">Late only</mat-slide-toggle>
+</div>
+
+@if (error()) {
+  <p class="error">{{ error() }}</p>
+}
+
+<table mat-table [dataSource]="shipments()" class="shipment-table">
+  <ng-container matColumnDef="customer_name">
+    <th mat-header-cell *matHeaderCellDef>Customer</th>
+    <td mat-cell *matCellDef="let s">{{ s.customer_name }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="destination">
+    <th mat-header-cell *matHeaderCellDef>Destination</th>
+    <td mat-cell *matCellDef="let s">{{ s.destination }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="status">
+    <th mat-header-cell *matHeaderCellDef>Status</th>
+    <td mat-cell *matCellDef="let s">
+      <span class="status-badge" [class.status-exception]="s.status === 'EXCEPTION'">
+        {{ s.status }}
+      </span>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="promised_date">
+    <th mat-header-cell *matHeaderCellDef>Promised</th>
+    <td mat-cell *matCellDef="let s">{{ s.promised_date | date:'mediumDate':'UTC' }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="is_late">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let s">
+      @if (s.is_late) {
+        <span class="late-badge">LATE</span>
+      }
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr
+    mat-row
+    *matRowDef="let row; columns: displayedColumns"
+    (click)="openShipment(row.id)"
+    class="clickable-row"
+  ></tr>
+</table>
+
+@if (!loading() && shipments().length === 0) {
+  <p class="empty">No shipments match these filters.</p>
+}

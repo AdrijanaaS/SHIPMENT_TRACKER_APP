@@ -1,0 +1,65 @@
+@if (loading()) {
+  <p>Loading…</p>
+}
+
+@if (error()) {
+  <p class="error">{{ error() }}</p>
+  <a mat-button [routerLink]="'/'">
+    <mat-icon>arrow_back</mat-icon>
+    Back to shipments
+  </a>
+}
+
+@if (shipment(); as s) {
+  <a mat-button [routerLink]="'/'">
+    <mat-icon>arrow_back</mat-icon>
+    Back to shipments
+  </a>
+
+  <h1>Shipment #{{ s.id }}</h1>
+
+  <div class="summary">
+    <div><span class="label">Customer</span><span>{{ s.customer_name }}</span></div>
+    <div><span class="label">Email</span><span>{{ s.customer_email }}</span></div>
+    <div><span class="label">Destination</span><span>{{ s.destination }}</span></div>
+    <div><span class="label">Promised date</span><span>{{ s.promised_date | date:'mediumDate':'UTC' }}</span></div>
+    <div>
+      <span class="label">Status</span>
+      <span class="status-badge" [class.status-exception]="s.status === 'EXCEPTION'">{{ s.status }}</span>
+      @if (s.is_late) {
+        <span class="late-badge">LATE</span>
+      }
+    </div>
+  </div>
+
+  <h2>Record an event</h2>
+  @if (nextStatuses.length === 0) {
+    <p class="muted">No further events can be recorded for this shipment.</p>
+  } @else {
+    <mat-form-field appearance="outline" class="note-field">
+      <mat-label>Note (optional)</mat-label>
+      <input matInput [(ngModel)]="eventNote" placeholder="e.g. reason for a delay or exception" />
+    </mat-form-field>
+
+    <div class="actions">
+      @for (status of nextStatuses; track status) {
+        <button mat-raised-button color="primary" [disabled]="recording()" (click)="recordEvent(status)">
+          Mark as {{ status }}
+        </button>
+      }
+    </div>
+  }
+
+  <h2>Event history</h2>
+  <ul class="timeline">
+    @for (event of s.events; track event.id) {
+      <li>
+        <span class="status-badge">{{ event.status }}</span>
+        <span class="timestamp">{{ event.occurred_at | date:'medium' }}</span>
+        @if (event.note) {
+          <p class="note">{{ event.note }}</p>
+        }
+      </li>
+    }
+  </ul>
+}

@@ -1,0 +1,10 @@
+.shipment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 420px;
+}
+
+.error {
+  color: #c62828;
+}
